@@ -1,0 +1,58 @@
+# Ansible examples
+
+Various examples of Ansible code.
+
+(This file is generated. Do not update it manually. See the section below.)
+
+
+## Index
+
+{% for group in ex_tags %}
+
+**{{ group.0 }}**
+{% for tag in  group.1|map(attribute='tags')|flatten|groupby('tag') %}
+  - {{ tag.0 }} {% for i in tag.1|map(attribute='ex')|list %}[{{ i }}]({{ url ~ "%03d" % (i|int,) }}),
+{% endfor %}
+{% endfor %}
+{% endfor %}
+
+
+## Contents
+
+{% for i in ex_no|zip(ex_txt) %}
+- [Example {{ "%3d" % (i.0|int) }}.]({{ url ~ "%03d" % (i.0|int) }}) {{ i.1 }}
+{% endfor %}
+
+
+## Update README.md
+
+To update README.md file go to the directory *doc*.
+
+* Update the file *list_of_examples.yml* if you want to update the
+list of examples in the contents and tags in the index. The structure
+of a line in this file is follows. If the example belongs to more
+categories add more lines wiht he same number of the example. The
+comment is optional.
+
+```
+     - Number_of_the_example. "Category; tag; tag; ... tag; Comment."
+```
+
+* Update the template *templates/README.md.j2* if you want to update
+  the text.
+
+* Just type *make* to update README.md
+
+```bash
+     shell> ./make
+```
+
+
+## License
+
+[![license](https://img.shields.io/badge/license-BSD-red.svg)](https://www.freebsd.org/doc/en/articles/bsdl-gpl/article.html)
+
+
+## Author Information
+
+[Vladimir Botka](https://botka.info)

@@ -1,0 +1,21 @@
+- name: start job logger
+  listen: start job
+  when: logger.enable
+  command: "logger -p {{ logger.facility }}.info  {{ msg }}"
+  vars:
+    msg: >-
+      [{{ inventory_hostname }}] started
+      pid: {{ my_cache[my_script].job_pid }}
+      [async] ansible_job_id: {{ my_cache[my_script].ansible_job_id }}
+  delegate_to: localhost
+
+- name: stop job logger
+  listen: stop job
+  when: logger.enable
+  command: "logger -p {{ logger.facility }}.info  {{ msg }}"
+  vars:
+    msg: >-
+      [{{ inventory_hostname }}] stopped
+      pid: {{ my_cache[my_script].job_pid }}
+      {{ stop_msg|d('') }}
+  delegate_to: localhost

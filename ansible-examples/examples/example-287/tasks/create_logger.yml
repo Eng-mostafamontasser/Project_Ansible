@@ -1,0 +1,10 @@
+- name: Configure rsyslog  # noqa no-tabs
+  copy:
+    dest: "{{ logger.conf }}"
+    mode: "{{ logger.conf_mode }}"
+    content: |
+      {{ logger.facility }}.*			-{{ logger.log }}
+    validate: rsyslogd -N 1 -f %s
+  notify: rsyslog restart
+  run_once: true
+  delegate_to: localhost

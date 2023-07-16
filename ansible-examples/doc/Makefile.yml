@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+
+    url: https://github.com/vbotka/ansible-examples/tree/master/examples/example-
+    examples: "{{ lookup('file', 'list_of_examples.yml')|from_yaml|
+                  map('split', sep='.', maxsplit=1)|list }}"
+    ex_no: "{{ examples|map('first')|list }}"
+    ex_txt: "{{ examples|map('last')|map('trim')|list }}"
+    ex_tags: "{{ ex_no|zip(ex_txt)|map('examples_tags')|groupby('group') }}"
+
+  tasks:
+
+    - debug:
+        msg: |
+          {% for group in ex_tags %}
+          **{{ group.0 }}**
+          {% for tag in  group.1|map(attribute='tags')|flatten|groupby('tag') %}
+            - {{ tag.0 }} {% for i in tag.1|map(attribute='ex')|list %}[{{ i }}]({{ url ~ "%03d" % (i|int,) }}), {% endfor %}
+          {% endfor %}
+          {% endfor %}
+      when: false
+
+    - template:
+        src: README.md.j2
+        dest: ../README.md
+        backup: true
+      when: true
